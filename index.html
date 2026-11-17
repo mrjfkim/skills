@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting Notes Wizard - SkillSpotlight (DEMO)</title>
+<meta name="description" content="Fictional demo page for a security presentation. Site, creator and ratings are simulated.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --ink:#0b1220; --body:#334155; --muted:#64748b; --line:#e5e9f0; --bg:#f4f6fb; --card:#fff;
+    --brand:#4f46e5; --brand-dark:#4338ca; --brand-soft:#eef2ff; --star:#f59e0b;
+    --warn-bg:#fef3c7; --warn-line:#f59e0b; --warn-ink:#78350f; --ok:#059669;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--body); background:var(--bg); line-height:1.6; font-size:15px; }
+  a { color:var(--brand); text-decoration:none; } a:hover { text-decoration:underline; }
+
+  .demo-banner { position:sticky; top:0; z-index:50; background:var(--warn-bg); color:var(--warn-ink);
+    border-bottom:1px solid var(--warn-line); padding:7px 16px; text-align:center; font-size:12.5px; font-weight:bold; letter-spacing:.2px; }
+
+  /* top area */
+  .top { background:linear-gradient(180deg,#1e1b4b 0%,#312e81 55%,#4338ca 100%); color:#fff; }
+  .nav-in { max-width:1120px; margin:0 auto; padding:0 24px; height:68px; display:flex; align-items:center; gap:32px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:bold; font-size:19px; color:#fff; }
+  .logo-mark { width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,#a5b4fc,#6366f1);
+    display:flex; align-items:center; justify-content:center; }
+  .nav-links { display:flex; gap:26px; font-size:14px; margin-left:6px; }
+  .nav-links a { color:#c7d2fe; } .nav-links a:hover { color:#fff; text-decoration:none; }
+  .search { margin-left:auto; width:280px; padding:10px 14px; border:1px solid rgba(255,255,255,.2); border-radius:9px;
+    background:rgba(255,255,255,.1); font-size:14px; color:#c7d2fe; }
+  .crumbs { max-width:1120px; margin:0 auto; padding:6px 24px 0; font-size:13px; color:#a5b4fc; }
+
+  .hero-in { max-width:1120px; margin:0 auto; padding:22px 24px 84px; display:flex; gap:24px; align-items:center; }
+  .icon { flex:none; width:96px; height:96px; border-radius:24px; background:linear-gradient(135deg,#fff,#c7d2fe);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px rgba(0,0,0,.28); }
+  h1 { margin:0 0 8px; font-size:34px; line-height:1.15; color:#fff; letter-spacing:-.3px; }
+  .tagline { margin:0 0 12px; color:#c7d2fe; font-size:16px; max-width:620px; }
+  .byline { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:14px; color:#c7d2fe; }
+  .av { width:28px; height:28px; border-radius:50%; background:#0ea5e9; color:#fff; font-size:12px; font-weight:bold;
+    display:inline-flex; align-items:center; justify-content:center; border:2px solid rgba(255,255,255,.5); }
+  .pill { font-size:10.5px; font-weight:bold; letter-spacing:.6px; text-transform:uppercase; padding:2px 8px; border-radius:999px;
+    background:rgba(255,255,255,.18); color:#e0e7ff; border:1px solid rgba(255,255,255,.3); }
+  .fn { font-size:12px; color:var(--muted); margin-top:12px; }
+  .chip { display:inline-block; font-size:11px; font-weight:bold; padding:2px 9px; border-radius:999px; }
+  .chip.demo { background:var(--warn-bg); color:var(--warn-ink); border:1px solid var(--warn-line); }
+  .chip.cat { background:rgba(255,255,255,.16); color:#fff; }
+
+  /* layout */
+  .wrap { max-width:1120px; margin:-56px auto 0; padding:0 24px 56px; display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:28px; }
+  @media (max-width:900px) { .wrap { grid-template-columns:1fr; } .search,.nav-links { display:none; } .hero-in { flex-direction:column; align-items:flex-start; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 4px 18px rgba(15,23,42,.06); }
+  .pad { padding:28px; }
+  .stack > * + * { margin-top:22px; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); }
+  .stat { padding:20px 22px; border-right:1px solid var(--line); }
+  .stat:last-child { border-right:0; }
+  .stat b { display:block; font-size:22px; color:var(--ink); }
+  .stat span { font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.7px; }
+  @media (max-width:600px) { .stats { grid-template-columns:repeat(2,1fr); } }
+
+  h2 { font-size:19px; color:var(--ink); margin:0 0 14px; }
+  .features { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:700px) { .features { grid-template-columns:1fr; } }
+  .feat { border:1px solid var(--line); border-radius:12px; padding:16px; background:#fbfcff; }
+  .feat .fi { width:36px; height:36px; border-radius:10px; background:var(--brand-soft); color:var(--brand); display:flex;
+    align-items:center; justify-content:center; margin-bottom:10px; }
+  .feat b { color:var(--ink); display:block; margin-bottom:2px; }
+  .feat p { margin:0; font-size:13.5px; color:var(--muted); }
+
+  .sample { border:1px solid var(--line); border-radius:12px; overflow:hidden; font-size:14px; }
+  .sample .bar-top { background:#0f172a; color:#94a3b8; font-size:12px; padding:8px 14px; }
+  .sample .body { padding:16px 18px; background:#fff; }
+  .sample h4 { margin:12px 0 4px; font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--brand-dark); }
+  .sample h4:first-child { margin-top:0; }
+  .sample p { margin:0; }
+
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th, td { text-align:left; padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { width:30%; color:var(--muted); font-weight:bold; background:var(--bg); }
+  tr:last-child th, tr:last-child td { border-bottom:0; }
+  .sample table th { width:auto; }
+  code { background:#0f172a; color:#e2e8f0; padding:13px 15px; display:block; border-radius:10px; font-size:13px;
+    font-family:Consolas, Menlo, monospace; overflow-x:auto; }
+
+  .more { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:700px) { .more { grid-template-columns:1fr; } }
+  .mini { border:1px solid var(--line); border-radius:12px; padding:16px; background:#fff; }
+  .mini .mi { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff; margin-bottom:10px; }
+  .mini b { color:var(--ink); display:block; }
+  .mini small { color:var(--muted); font-size:12.5px; }
+
+  .side { position:sticky; top:50px; align-self:start; }
+  .score { display:flex; align-items:center; gap:16px; }
+  .score .big { font-size:48px; font-weight:bold; color:var(--ink); line-height:1; }
+  .stars { color:var(--star); font-size:20px; letter-spacing:2px; }
+  .bars { margin-top:16px; }
+  .bar { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); margin:6px 0; }
+  .bar .track { flex:1; height:8px; background:var(--line); border-radius:99px; overflow:hidden; }
+  .bar .fill { height:100%; background:var(--star); }
+  .sim-note { margin-top:14px; padding:10px 12px; background:var(--warn-bg); border:1px solid var(--warn-line); color:var(--warn-ink);
+    border-radius:9px; font-size:12px; font-weight:bold; }
+  .btn { display:block; text-align:center; margin-top:18px; background:var(--brand); color:#fff; font-weight:bold; padding:14px 18px;
+    border-radius:11px; font-size:15px; box-shadow:0 6px 16px rgba(79,70,229,.3); }
+  .btn:hover { background:var(--brand-dark); text-decoration:none; }
+  .btn.alt { background:#fff; color:var(--brand); border:1px solid var(--brand); margin-top:10px; box-shadow:none; }
+  .btn.alt:hover { background:var(--brand-soft); }
+  .small { font-size:12px; color:var(--muted); margin-top:12px; text-align:center; }
+  .kv { margin-top:18px; border-top:1px solid var(--line); padding-top:14px; font-size:13px; }
+  .kv div { display:flex; justify-content:space-between; padding:4px 0; }
+  .kv span:first-child { color:var(--muted); }
+
+  footer { border-top:1px solid var(--line); background:#fff; }
+  .foot-in { max-width:1120px; margin:0 auto; padding:24px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="nav-in">
+    <div class="logo">
+      <span class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="#1e1b4b"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.1 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg></span>
+      SkillSpotlight <span class="pill">Demo</span>
+    </div>
+    <div class="nav-links"><a href="#">Browse</a><a href="#">Top creators</a><a href="#">Collections</a><a href="#">Docs</a></div>
+    <div class="search">Search skills&hellip;</div>
+  </div>
+  <div class="crumbs">Skills &rsaquo; Productivity &rsaquo; Meeting Notes Wizard</div>
+  <div class="hero-in">
+    <div class="icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Meeting Notes Wizard</h1>
+      <p class="tagline">Turn raw transcripts into a clean recap with decisions and action items, in seconds.</p>
+      <div class="byline">
+        <span class="av">NR</span><span>by <b style="color:#fff">Nova Reed</b></span>
+        <span class="chip cat">Productivity</span><span>v1.0.0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stack">
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><b>12.4k*</b><span>Downloads</span></div>
+        <div class="stat"><b>4.8*</b><span>Avg rating</span></div>
+        <div class="stat"><b>2,431*</b><span>Ratings</span></div>
+        <div class="stat"><b>2</b><span>Files</span></div>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <h2>Why people use it</h2>
+      <div class="features">
+        <div class="feat"><div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h6"/></svg></div>
+          <b>Three-line summary</b><p>The whole meeting at a glance.</p></div>
+        <div class="feat"><div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+          <b>Decisions captured</b><p>One line per decision, nothing buried.</p></div>
+        <div class="feat"><div class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg></div>
+          <b>Action-item table</b><p>Owner, task and due date, ready to paste.</p></div>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <h2>Sample output</h2>
+      <div class="sample">
+        <div class="bar-top">Example recap (illustrative)</div>
+        <div class="body">
+          <h4>Summary</h4><p>The team reviewed Q3 results and agreed to move the launch to October.</p>
+          <h4>Decisions</h4><p>&bull; Launch moves to October 14.</p>
+          <h4>Action items</h4>
+          <table>
+            <tr><th>Owner</th><th>Task</th><th>Due</th></tr>
+            <tr><td>Ana</td><td>Send the updated deck</td><td>Friday</td></tr>
+            <tr><td>Sam</td><td>Confirm venue booking</td><td>Next Tue</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <h2>Details</h2>
+      <table>
+        <tr><th>What it does</th><td>Summarizes meetings and extracts decisions, action items and open questions.</td></tr>
+        <tr><th>Best for</th><td>Team leads, project managers, anyone who takes notes in calls.</td></tr>
+        <tr><th>Works with</th><td>Claude and other skill-compatible agents</td></tr>
+        <tr><th>SKILL.md</th><td>Instructions the agent follows. <a href="skills/meeting-notes-wizard/SKILL.md">View source</a></td></tr>
+        <tr><th>scripts/format_notes.py</th><td>Pre-sorts likely action items. <a href="skills/meeting-notes-wizard/scripts/format_notes.py">View source</a></td></tr>
+      </table>
+      <h2 style="margin-top:22px">Install</h2>
+      <code>unzip meeting-notes-wizard.zip -d ~/.claude/skills/</code>
+    </div>
+
+    <div class="card pad">
+      <h2>More from Nova Reed</h2>
+      <div class="more">
+        <div class="mini"><div class="mi" style="background:#0ea5e9">&#9993;</div><b>Inbox Zero Helper</b><small>Productivity &middot; placeholder</small></div>
+        <div class="mini"><div class="mi" style="background:#10b981">&#9776;</div><b>Weekly Report Builder</b><small>Productivity &middot; placeholder</small></div>
+        <div class="mini"><div class="mi" style="background:#f43f5e">&#9998;</div><b>Plain-English Rewriter</b><small>Writing &middot; placeholder</small></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="side">
+    <div class="card pad">
+      <div class="score">
+        <div class="big">4.8</div>
+        <div>
+          <div class="stars" aria-label="4.8 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div style="font-size:13px;color:var(--muted)">2,431 ratings</div>
+        </div>
+      </div>
+      <div class="bars">
+        <div class="bar"><span>5&#9733;</span><div class="track"><div class="fill" style="width:84%"></div></div><span>84%</span></div>
+        <div class="bar"><span>4&#9733;</span><div class="track"><div class="fill" style="width:11%"></div></div><span>11%</span></div>
+        <div class="bar"><span>3&#9733;</span><div class="track"><div class="fill" style="width:3%"></div></div><span>3%</span></div>
+        <div class="bar"><span>2&#9733;</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
+        <div class="bar"><span>1&#9733;</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
+      </div>
+      <div class="fn">* Simulated figures. See the note at the bottom of the page.</div>
+      <a class="btn" href="downloads/meeting-notes-wizard.zip" download>Download skill (.zip)</a>
+      <a class="btn alt" href="skills/meeting-notes-wizard/SKILL.md">View SKILL.md</a>
+      <div class="kv">
+        <div><span>Size</span><span>3 KB</span></div>
+        <div><span>Version</span><span>1.0.0</span></div>
+        <div><span>Updated</span><span>Nov 2026</span></div>
+        <div><span>License</span><span>MIT</span></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <div style="max-width:720px">
+      <b style="color:var(--ink)">Demo notice.</b> SkillSpotlight, the creator "Nova Reed" and every rating, download count and
+      listing on this page are fictional and were created for a security demonstration. The ratings do not come from real users.
+      The skill is a test file used to simulate the patterns that AI skill scanners flag. &copy; 2026.
+    </div>
+    <div>Popularity is not proof of safety &mdash; always scan skills before installing.</div>
+  </div>
+</footer>
+
+</body>
+</html>
